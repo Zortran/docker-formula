@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # vim: ft=sls
-{% from "docker/map.jinja" import docker with context %}
+{%- from slspath ~ "/map.jinja" import docker with context %}
 
 docker-packages-cleaned-service-dead:
   service.dead:
@@ -27,6 +27,9 @@ docker-packages-cleaned:
       - docker-selinux
       - docker-engine-selinux
       - docker-engine
+   {%- for pkgname in docker.pkgs %}
+      - {{ pkgname }}
+   {%- endfor %}
 
 {# remove pip packages installed by formula #}
 

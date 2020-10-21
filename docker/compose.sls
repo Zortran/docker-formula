@@ -1,9 +1,7 @@
-{#- Get the `tplroot` from `tpldir` #}
-{%- set tplroot = tpldir.split('/')[0] %}
-{%- from tplroot ~ "/map.jinja" import docker with context %}
+{%- from slspath ~ "/map.jinja" import docker with context %}
 
 include:
-  - docker
+  - ..docker
 
 docker-compose:
       {%- if grains.os_family in ('Suse',) %}   ##workaround https://github.com/saltstack-formulas/docker-formula/issues/198

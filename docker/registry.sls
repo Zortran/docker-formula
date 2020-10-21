@@ -1,12 +1,10 @@
-{#- Get the `tplroot` from `tpldir` #}
-{%- set tplroot = tpldir.split('/')[0] %}
-{%- from tplroot ~ "/map.jinja" import docker with context %}
+{%- from slspath ~ "/map.jinja" import docker with context %}
 
 file-registry-upstart-conf:
   file.managed:
     - name: /etc/init/registry.conf
-    - source: salt://docker/files/upstart.conf.deprecated.registry
-    - mode: 700
+    - source: salt://{{ slspath }}/files/upstart.conf.deprecated.registry
+    - mode: "0700"
     - user: root
     - template: jinja
     - require:

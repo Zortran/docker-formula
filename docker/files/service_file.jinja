@@ -14,7 +14,7 @@
 {%- set docker_poststop_command = "rm -f %s"|format(name) %}
 
 {%- if grains['init'] == 'systemd' %}
-{%- include 'docker/files/systemd.conf' %}
+{%- include './systemd.conf' %}
 {%- elif grains['init'] == 'upstart' %}
-{%- include 'docker/files/upstart.conf' %}
+{%- include './upstart.conf' %}
 {%- endif %}

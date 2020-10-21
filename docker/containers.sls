@@ -1,9 +1,7 @@
-{#- Get the `tplroot` from `tpldir` #}
-{%- set tplroot = tpldir.split('/')[0] %}
-{%- from tplroot ~ "/map.jinja" import containers with context %}
+{%- from slspath ~ "/map.jinja" import containers with context %}
 
 include:
-  - docker
+  - ..docker
 
 {% for name, container in containers.items() %}
 docker-image-{{ name }}:
@@ -21,12 +19,12 @@ docker-container-startup-config-{{ name }}:
   file.managed:
 {%- if init_system == "systemd" %}
     - name: /etc/systemd/system/docker-{{ name }}.service
-    - mode: 644
+    - mode: "0644"
 {%- elif init_system == "upstart" %}
     - name: /etc/init/docker-{{ name }}.conf
-    - mode: 700
+    - mode: "0700"
 {%- endif %}
-    - source: salt://docker/files/service_file.jinja
+    - source: salt://{{ slspath }}/files/service_file.jinja
     - user: root
     - template: jinja
     - defaults:

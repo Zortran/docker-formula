@@ -1,7 +1,5 @@
 
-{#- Get the `tplroot` from `tpldir` #}
-{%- set tplroot = tpldir.split('/')[0] %}
-{%- from tplroot ~ "/map.jinja" import docker with context %}
+{%- from slspath ~ "/map.jinja" import docker with context %}
 
 {% set repo_state = 'absent' %}
 {% if docker.use_upstream_repo or docker.use_old_repo %}

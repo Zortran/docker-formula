@@ -1,6 +1,4 @@
-{#- Get the `tplroot` from `tpldir` #}
-{%- set tplroot = tpldir.split('/')[0] %}
-{%- from tplroot ~ "/map.jinja" import docker with context %}
+{%- from slspath ~ "/map.jinja" import docker with context %}
 
 {%- if docker.kernel is defined and grains['os_family']|lower == 'debian' %}
 pkgrepo-dependencies:

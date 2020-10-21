@@ -1,4 +1,4 @@
-{% from "docker/map.jinja" import docker with context %}
+{%- from "./map.jinja" import docker with context %}
 
 {%- set docker_pkg_name = docker.pkg.old_name if docker.use_old_repo else docker.pkg.name %}
 {%- set docker_pkg_version = docker.version | default(docker.pkg.version) %}
@@ -50,9 +50,9 @@ docker-package:
 docker-config:
   file.managed:
     - name: {{ docker.configfile }}
-    - source: salt://docker/files/config
+    - source: salt://{{ slspath }}/files/config
     - template: jinja
-    - mode: 644
+    - mode: "0644"
     - user: root
     - context:
         config: {{ docker.config | json }}
@@ -68,14 +68,14 @@ docker-daemon-dir:
     - name: /etc/docker
     - user: root
     - group: root
-    - mode: 755
+    - mode: "0755"
 
 docker-daemon-config:
   file.serialize:
     - name: /etc/docker/daemon.json
     - user: root
     - group: root
-    - mode: 644
+    - mode: "0644"
     - dataset:
         {{ docker.daemon_config | yaml() | indent(8) }}
     - formatter: json
@@ -93,6 +93,19 @@ docker-service:
         {% if "process_signature" in docker %}
     - sig: {{ docker.process_signature }}
         {% endif %}
+  {% if grains.init == 'systemd' %}
+  file.managed:
+    - name: /etc/systemd/system/docker.service.d/docker.conf
+    - source: salt://{{ slspath }}/files/docker.conf
+    - mode: "0644"
+    - user: root
+    - group: root
+    - makedirs: true
+    - required_in:
+      - service: docker-service
+    - watch_in:
+      - service: docker-service
+  {% endif %}
 
 docker-install-docker-service-not-running-notify:
   test.show_notification:
